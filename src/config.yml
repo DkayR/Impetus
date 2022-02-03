@@ -1,0 +1,45 @@
+# Database Info
+database:
+    host: localhost
+    port: 3306
+    databaseName:
+    username:
+    password:
+    script: createtables.sql
+
+# Practice Options
+practice:
+    cancelInteractions:
+        - CHEST
+        - FENCE_GATE
+        - ACACIA_FENCE_GATE
+        - SPRUCE_FENCE_GATE
+        - DARK_OAK_FENCE_GATE
+        - JUNGLE_FENCE_GATE
+        - BIRCH_FENCE_GATE
+        - DARK_OAK_DOOR
+        - ACACIA_DOOR
+        - BIRCH_DOOR
+        - JUNGLE_DOOR
+        - WOOD_DOOR
+        - SPRUCE_DOOR
+        - ANVIL
+        - COMMAND
+        - ENDER_CHEST
+        - TRAP_DOOR
+        - DISPENSER
+        - FURNACE
+        - WORKBENCH
+        - ENCHANTMENT_TABLE
+        - BEACON
+        - DROPPER
+    activatorBlocks:
+        - STONE_PLATE
+        - GOLD_PLATE
+        - IRON_PLATE
+        - WOOD_PLATE
+    practiceOnDrop: true
+    makePluginItemsDroppable: false
+    destroyBlocksWhileHoldingPracticeTool: false
+    destroyActivatorBlocksWithoutPkTool: false
+    displayTimer: true
