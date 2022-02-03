@@ -1,0 +1,18 @@
+name: Impetus
+version: 1
+author: dklink750
+main: ca.dklink750.impetus.Impetus
+api-version: 1.8.8
+commands:
+  prac:
+    description: Create a practice checkpoint
+    usage: /prac
+    permission: Impetus.prac
+  unprac:
+    description: Removes a practice checkpoint
+    usage: /unprac
+    permission: Impetus.unprac
+  pktool:
+    description: Gives player tool to customize blocks
+    usage: /pktool
+    permission: Impetus.pktool
