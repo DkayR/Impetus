@@ -28,34 +28,38 @@ public class Prac implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            World currentWorld = player.getWorld();
+            if (player.hasPermission("Impetus.prac")) {
+                World currentWorld = player.getWorld();
 
-            // Hack to not give item twice when calling via drop event
-            if (args.length > 0 && args[0].equals("noitem")) {
+                // Hack to not give item twice when calling via drop event
+                if (args.length > 0 && args[0].equals("noitem")) {
                     pracAtCurrentLocation(player);
-            }
-            else {
-                if (practiceTool.giveCustomItemToPlayer(player, ChatColor.RED + "Inventory full, cannot practice!")) {
-                    if (args.length > 0) {
-                        User userToCheck = new User(database);
-                        if (userToCheck.playerExists(args[0])) {
-                            UUID otherPlayer = userToCheck.getPlayerUUIDFromUserName(args[0]);
-                            if (myPracLocations.containsPlayer(otherPlayer, currentWorld.getUID())) {
-                                if (args.length > 1 && args[1].equals("all")) {
-                                    copyAllPracLocationsFromOtherPlayer(player, otherPlayer, args[0]);
+                } else {
+                    if (practiceTool.giveCustomItemToPlayer(player, ChatColor.RED + "Inventory full, cannot practice!")) {
+                        if (args.length > 0) {
+                            User userToCheck = new User(database);
+                            if (userToCheck.playerExists(args[0])) {
+                                UUID otherPlayer = userToCheck.getPlayerUUIDFromUserName(args[0]);
+                                if (myPracLocations.containsPlayer(otherPlayer, currentWorld.getUID())) {
+                                    if (args.length > 1 && args[1].equals("all")) {
+                                        copyAllPracLocationsFromOtherPlayer(player, otherPlayer, args[0]);
+                                    } else {
+                                        copyCurrentPracLocationFromOtherPlayer(player, otherPlayer, args[0]);
+                                    }
                                 } else {
-                                    copyCurrentPracLocationFromOtherPlayer(player, otherPlayer, args[0]);
+                                    player.sendMessage(ChatColor.RED + args[0] + " does not have a practice location in this world!");
                                 }
                             } else {
-                                player.sendMessage(ChatColor.RED + args[0] + " does not have a practice location in this world!");
+                                player.sendMessage(ChatColor.RED + args[0] + " has never joined the server!");
                             }
                         } else {
-                            player.sendMessage(ChatColor.RED + args[0] + " has never joined the server!");
+                            pracAtCurrentLocation(player);
                         }
-                    } else {
-                        pracAtCurrentLocation(player);
                     }
                 }
+            }
+            else {
+                player.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
             }
         }
         return true;

@@ -19,20 +19,25 @@ public class Unprac implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (this.myPracLocations.containsPlayer(player.getUniqueId(), player.getWorld().getUID())) {
-                if (args.length > 0 && args[0].equals("all")) {
-                    this.myPracLocations.removeAllPracticeLocations(player.getUniqueId(), player.getWorld().getUID());
+            if(player.hasPermission("Impetus.unprac")) {
+                if (this.myPracLocations.containsPlayer(player.getUniqueId(), player.getWorld().getUID())) {
+                    if (args.length > 0 && args[0].equals("all")) {
+                        this.myPracLocations.removeAllPracticeLocations(player.getUniqueId(), player.getWorld().getUID());
+                    } else {
+                        this.myPracLocations.removeCurrentPracticeLocation(player.getUniqueId(), player.getWorld().getUID());
+                    }
+                    if (!this.myPracLocations.containsPlayer(player.getUniqueId(), player.getWorld().getUID())) {
+                        player.getInventory().remove(Material.SLIME_BALL);
+                        player.sendMessage(ChatColor.GREEN + "You are no longer in practice mode!");
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "Removed practice location(s)!");
+                    }
                 } else {
-                    this.myPracLocations.removeCurrentPracticeLocation(player.getUniqueId(), player.getWorld().getUID());
+                    player.sendMessage(ChatColor.RED + "You aren't in practice mode!");
                 }
-                if (!this.myPracLocations.containsPlayer(player.getUniqueId(), player.getWorld().getUID())) {
-                    player.getInventory().remove(Material.SLIME_BALL);
-                    player.sendMessage(ChatColor.GREEN + "You are no longer in practice mode!");
-                } else {
-                    player.sendMessage(ChatColor.GREEN + "Removed practice location(s)!");
-                }
-            } else {
-                player.sendMessage(ChatColor.RED + "You aren't in practice mode!");
+            }
+            else {
+                player.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
             }
         }
         return true;

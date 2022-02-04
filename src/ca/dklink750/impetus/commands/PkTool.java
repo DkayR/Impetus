@@ -15,7 +15,12 @@ public class PkTool implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            parkourTool.giveCustomItemToPlayer(player, ChatColor.RED + "Inventory full, cannot get parkour tool!", ChatColor.RED + "You already have a parkour tool!");
+            if(player.hasPermission("Impetus.pktool")) {
+                parkourTool.giveCustomItemToPlayer(player, ChatColor.RED + "Inventory full, cannot get parkour tool!", ChatColor.RED + "You already have a parkour tool!");
+            }
+            else {
+                player.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
+            }
         }
         return true;
     }
