@@ -105,23 +105,33 @@ public class ConfigManager {
         return activatorBlockTypes;
     }
 
-    public boolean practiceOnDrop() {
+    public boolean getPracticeOnDrop() {
         return practiceOnDrop;
     }
 
-    public boolean makePluginItemsDroppable() {
+    public boolean getMakePluginItemsDroppable() {
         return makePluginItemsDroppable;
     }
 
-    public boolean DestroyBlocksWhileHoldingPracticeTool() {
+    public boolean getDestroyBlocksWhileHoldingPracticeTool() {
         return destroyBlocksWhileHoldingPracticeTool;
     }
 
-    public boolean DestroyActivatorBlocksWithoutPkTool() {
+    public boolean getDestroyActivatorBlocksWithoutPkTool() {
         return destroyActivatorBlocksWithoutPkTool;
     }
 
-    public boolean displayTimer() {
+    public boolean getDisplayTimer() {
         return displayTimer;
     }
+
+    public void setPracticeOnDrop(boolean practiceOnDrop) { this.practiceOnDrop = practiceOnDrop; }
+
+    public void setMakePluginItemsDroppable(boolean makePluginItemsDroppable) { this.makePluginItemsDroppable = makePluginItemsDroppable; }
+
+    public void setDestroyBlocksWhileHoldingPracticeTool(boolean destroyBlocksWhileHoldingPracticeTool) { this.destroyBlocksWhileHoldingPracticeTool = destroyBlocksWhileHoldingPracticeTool; }
+
+    public void setDestroyActivatorBlocksWithoutPkTool(boolean destroyActivatorBlocksWithoutPkTool) { this.destroyActivatorBlocksWithoutPkTool = destroyActivatorBlocksWithoutPkTool; }
+
+    public void setDisplayTimer(boolean displayTimer) { this.displayTimer = displayTimer; }
 }

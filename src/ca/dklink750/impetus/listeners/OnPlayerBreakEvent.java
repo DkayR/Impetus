@@ -2,6 +2,7 @@ package ca.dklink750.impetus.listeners;
 
 import ca.dklink750.impetus.ActivatorBlock;
 import ca.dklink750.impetus.ActivatorLocation;
+import ca.dklink750.impetus.utils.ConfigManager;
 import ca.dklink750.impetus.utils.HeldItemUtil;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -14,13 +15,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class OnPlayerBreakEvent implements org.bukkit.event.Listener {
-    private final boolean destroyBlocksWhileHoldingPracticeTool;
-    private final boolean destroyActivatorBlocksWithoutPkTool;
+    private final ConfigManager configManager;
     private final ActivatorBlock activatorBlock;
 
-    public OnPlayerBreakEvent(boolean destroyBlocksWhileHoldingPracticeTool, boolean destroyActivatorBlocksWithoutPkTool, ActivatorBlock activatorBlock) {
-        this.destroyBlocksWhileHoldingPracticeTool = destroyBlocksWhileHoldingPracticeTool;
-        this.destroyActivatorBlocksWithoutPkTool = destroyActivatorBlocksWithoutPkTool;
+    public OnPlayerBreakEvent(ConfigManager configManager, ActivatorBlock activatorBlock) {
+        this.configManager = configManager;
         this.activatorBlock = activatorBlock;
     }
 
@@ -49,13 +48,13 @@ public class OnPlayerBreakEvent implements org.bukkit.event.Listener {
 
         if(holding.isHoldingItem(player)) {
             // Stops destroying blocks while holding tool (depends on config)
-            if((!destroyBlocksWhileHoldingPracticeTool && holding.isPracticeTool(itemInHand))) {
+            if((!configManager.getDestroyBlocksWhileHoldingPracticeTool() && holding.isPracticeTool(itemInHand))) {
                 event.setCancelled(true);
             }
 
             // Stops deletion of activator block when not holding pktool and config does not override
             if(isActivatorBlock) {
-                if(!holding.isPkTool(itemInHand) && !destroyActivatorBlocksWithoutPkTool) {
+                if(!holding.isPkTool(itemInHand) && !configManager.getDestroyActivatorBlocksWithoutPkTool()) {
                     player.spigot().sendMessage(createActivatorDestroyWarnMsg());
                     cancelDeletionOfActivator = true;
                     event.setCancelled(true);
@@ -64,7 +63,7 @@ public class OnPlayerBreakEvent implements org.bukkit.event.Listener {
         }
         // Catches empty hand scenario
         else {
-            if(isActivatorBlock && !destroyActivatorBlocksWithoutPkTool) {
+            if(isActivatorBlock && !configManager.getDestroyActivatorBlocksWithoutPkTool()) {
                 player.spigot().sendMessage(createActivatorDestroyWarnMsg());
                 cancelDeletionOfActivator = true;
                 event.setCancelled(true);
