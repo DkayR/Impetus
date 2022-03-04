@@ -1,5 +1,4 @@
 # Impetus
-WIP
 ## Requirements
 Impetus requires MariaDB to function currently
 
