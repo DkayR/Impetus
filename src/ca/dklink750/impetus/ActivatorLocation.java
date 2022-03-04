@@ -1,13 +1,13 @@
 package ca.dklink750.impetus;
 
 import org.bukkit.World;
+import java.util.Objects;
 
-// TODO: Refactor code to use getters rather than directly accessing members
 public class ActivatorLocation {
-    final public World world;
-    final public Integer x;
-    final public Integer y;
-    final public Integer z;
+    final private World world;
+    final private Integer x;
+    final private Integer y;
+    final private Integer z;
 
     public ActivatorLocation(World world, Integer x, Integer y, Integer z) {
         this.world = world;
@@ -18,20 +18,25 @@ public class ActivatorLocation {
 
     @Override
     public boolean equals(Object o) {
-        if (getClass() != o.getClass()) {
-            return false;
-        }
-        if (o == this) {
-            return true;
-        }
-        boolean equals = true;
-        ActivatorLocation activatorLocation = (ActivatorLocation) o;
-        if (world.getUID() != activatorLocation.world.getUID() ||
-                !x.equals(activatorLocation.x) ||
-                !y.equals(activatorLocation.y) ||
-                !z.equals(activatorLocation.z)) {
-            equals = false;
-        }
-        return equals;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ActivatorLocation that = (ActivatorLocation) o;
+        return Objects.equals(world, that.world) && Objects.equals(x, that.x) && Objects.equals(y, that.y) && Objects.equals(z, that.z);
+    }
+
+    public World world() {
+        return world;
+    }
+
+    public Integer x() {
+        return x;
+    }
+
+    public Integer y() {
+        return y;
+    }
+
+    public Integer z() {
+        return z;
     }
 }

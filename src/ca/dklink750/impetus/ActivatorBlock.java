@@ -29,10 +29,10 @@ public class ActivatorBlock {
     public boolean isActivatorBlockFromLoc(ActivatorLocation activatorLocation) {
         boolean foundBlock = false;
         try (Connection conn = database.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT * FROM impetus_activator_blocks WHERE world_uuid = ? AND block_x = ? AND block_y = ? AND block_z = ?;")) {
-            stmt.setString(1, activatorLocation.world.getUID().toString());
-            stmt.setInt(2, activatorLocation.x);
-            stmt.setInt(3, activatorLocation.y);
-            stmt.setInt(4, activatorLocation.z);
+            stmt.setString(1, activatorLocation.world().getUID().toString());
+            stmt.setInt(2, activatorLocation.x());
+            stmt.setInt(3, activatorLocation.y());
+            stmt.setInt(4, activatorLocation.z());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 foundBlock = true;
@@ -62,10 +62,10 @@ public class ActivatorBlock {
     public UUID getActivatorBlockUUID(ActivatorLocation activatorLocation) {
         UUID activatorUUID = null;
         try (Connection conn = database.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT block_uuid FROM impetus_activator_blocks WHERE world_uuid = ? AND block_x = ? AND block_y = ? AND block_z = ?;")) {
-            stmt.setString(1, activatorLocation.world.getUID().toString());
-            stmt.setInt(2, activatorLocation.x);
-            stmt.setInt(3, activatorLocation.y);
-            stmt.setInt(4, activatorLocation.z);
+            stmt.setString(1, activatorLocation.world().getUID().toString());
+            stmt.setInt(2, activatorLocation.x());
+            stmt.setInt(3, activatorLocation.y());
+            stmt.setInt(4, activatorLocation.z());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 activatorUUID = UUID.fromString(rs.getString(1));
@@ -81,10 +81,10 @@ public class ActivatorBlock {
         UUID activatorBlockUUID = UUID.randomUUID();
         try (Connection conn = database.getConnection(); PreparedStatement stmt = conn.prepareStatement("INSERT INTO impetus_activator_blocks (block_uuid, world_uuid, block_x, block_y, block_z) VALUES (?,?,?,?,?);")) {
             stmt.setString(1, activatorBlockUUID.toString());
-            stmt.setString(2, activatorLocation.world.getUID().toString());
-            stmt.setInt(3, activatorLocation.x);
-            stmt.setInt(4, activatorLocation.y);
-            stmt.setInt(5, activatorLocation.z);
+            stmt.setString(2, activatorLocation.world().getUID().toString());
+            stmt.setInt(3, activatorLocation.x());
+            stmt.setInt(4, activatorLocation.y());
+            stmt.setInt(5, activatorLocation.z());
             stmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -212,10 +212,10 @@ public class ActivatorBlock {
     public String getEffectSetUUIDFromActivatorLoc(ActivatorLocation activatorLocation) {
         String effectSetUUID = "";
         try (Connection conn = database.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT effect_set_uuid FROM impetus_activator_blocks WHERE world_uuid = ? AND block_x = ? AND block_y = ? AND block_z = ?;")) {
-            stmt.setString(1, activatorLocation.world.getUID().toString());
-            stmt.setInt(2, activatorLocation.x);
-            stmt.setInt(3, activatorLocation.y);
-            stmt.setInt(4, activatorLocation.z);
+            stmt.setString(1, activatorLocation.world().getUID().toString());
+            stmt.setInt(2, activatorLocation.x());
+            stmt.setInt(3, activatorLocation.y());
+            stmt.setInt(4, activatorLocation.z());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 effectSetUUID = rs.getString(1);

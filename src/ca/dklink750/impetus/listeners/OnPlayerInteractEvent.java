@@ -117,6 +117,10 @@ public class OnPlayerInteractEvent implements org.bukkit.event.Listener {
                         holding.removeItemInHand(player);
                         player.sendMessage(ChatColor.GREEN + "Successfully setup precise coordinates!");
                     }
+                    else {
+                        holding.removeItemInHand(player);
+                        player.sendMessage(ChatColor.RED + "Activator block no longer exists!");
+                    }
                 }
                 // Handles setting up activator blocks on right clicking blocks with the parkour tool (TODO: flesh out parkour to open gui ect)
                 else if(rightClickedBlock && holding.isPkTool(itemInHand)) {
