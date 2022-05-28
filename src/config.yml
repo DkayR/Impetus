@@ -43,3 +43,4 @@ practice:
     destroyBlocksWhileHoldingPracticeTool: false
     destroyActivatorBlocksWithoutPkTool: false
     displayTimer: true
+    cycleOnLeftClick: true

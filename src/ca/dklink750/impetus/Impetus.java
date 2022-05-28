@@ -75,7 +75,7 @@ public class Impetus extends JavaPlugin {
 
     private void registerEventListeners(PluginManager pluginManager) {
         pluginManager.registerEvents(new OnPlayerJoinEvent(getUser(), getPracLocations(), getConfigManager()), this);
-        pluginManager.registerEvents(new OnPlayerInteractEvent(getActivatorBlock(), getPracLocations(), configManager.getIneractablesToCancel(), configManager.getActivatorBlockTypes()), this);
+        pluginManager.registerEvents(new OnPlayerInteractEvent(getActivatorBlock(), getPracLocations(), getConfigManager()), this);
         pluginManager.registerEvents(new OnPlayerDropEvent(getConfigManager()), this);
         pluginManager.registerEvents(new OnPlayerBreakEvent(getConfigManager(), getActivatorBlock()), this);
         pluginManager.registerEvents(new OnPlayerWorldChangeEvent(getPracLocations(), getConfigManager()), this);

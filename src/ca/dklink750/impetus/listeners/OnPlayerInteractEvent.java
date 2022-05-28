@@ -1,6 +1,7 @@
 package ca.dklink750.impetus.listeners;
 
 import ca.dklink750.impetus.*;
+import ca.dklink750.impetus.utils.ConfigManager;
 import ca.dklink750.impetus.utils.CustomItem;
 import ca.dklink750.impetus.utils.HeldItemUtil;
 import org.bukkit.ChatColor;
@@ -12,33 +13,29 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 import java.util.UUID;
 
 public class OnPlayerInteractEvent implements org.bukkit.event.Listener {
     private final ActivatorBlock activatorBlock;
     private final PracLocation pracLocation;
-    private final List<Material> nonInteractables;
-    private final List<Material> activatorBlockTypes;
+    private final ConfigManager configManager;
     private Long lastSystemTime = 0L;
 
 
-    public OnPlayerInteractEvent(ActivatorBlock activatorBlock, PracLocation pracLocation, List<Material> nonInteractables, List<Material> activatorBlockTypes) {
+    public OnPlayerInteractEvent(ActivatorBlock activatorBlock, PracLocation pracLocation, ConfigManager configManager) {
         this.activatorBlock = activatorBlock;
         this.pracLocation = pracLocation;
-        this.nonInteractables = nonInteractables;
-        this.activatorBlockTypes = activatorBlockTypes;
+        this.configManager = configManager;
     }
 
     // Checks if a block is interactable
     private boolean isInteractable(Material block) {
-        return nonInteractables.contains(block);
+        return configManager.getIneractablesToCancel().contains(block);
     }
 
     // Checks if a block is an accepted activator block
     private boolean isActivatorBlockType(Material block) {
-        return activatorBlockTypes.contains(block);
+        return configManager.getActivatorBlockTypes().contains(block);
     }
 
     // Hacky method: Checks if player double triggered interact event (Stops double interactions from things like cobblestone walls, crafting tables, ect)
@@ -97,7 +94,7 @@ public class OnPlayerInteractEvent implements org.bukkit.event.Listener {
                         player.teleport(pracLocation.getCurrentPracticeLocation(player.getUniqueId(), world));
                     }
                     // Teleport player to different practice location if exists on left click while holding practice tool
-                    else if((leftClickedAir || leftClickedBlock) && pracLocation.hasOtherLocationInWorld(player, world)) {
+                    else if(configManager.getCycleOnLeftClick() && (leftClickedAir || leftClickedBlock) && pracLocation.hasOtherLocationInWorld(player, world)) {
                         pracLocation.incrementAttempts(player);
                         player.teleport(pracLocation.cyclePlayerPracticeLocation(player, world));
                     }

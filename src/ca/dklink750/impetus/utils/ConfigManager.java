@@ -21,6 +21,7 @@ public class ConfigManager {
     private boolean destroyBlocksWhileHoldingPracticeTool;
     private boolean destroyActivatorBlocksWithoutPkTool;
     private boolean displayTimer;
+    private boolean cycleOnLeftClick;
 
     public ConfigManager(FileConfiguration config) {
         this.config = config;
@@ -32,6 +33,7 @@ public class ConfigManager {
         this.destroyBlocksWhileHoldingPracticeTool = config.getBoolean("practice.destroyBlocksWhileHoldingPracticeTool");
         this.destroyActivatorBlocksWithoutPkTool = config.getBoolean("practice.destroyActivatorBlocksWithoutPkTool");
         this.displayTimer = config.getBoolean("practice.displayTimer");
+        this.cycleOnLeftClick = config.getBoolean("practice.cycleOnLeftClick");
     }
 
     private void loadNonInteractable() {
@@ -125,6 +127,8 @@ public class ConfigManager {
         return displayTimer;
     }
 
+    public boolean getCycleOnLeftClick() { return cycleOnLeftClick; }
+
     public void setPracticeOnDrop(boolean practiceOnDrop) { this.practiceOnDrop = practiceOnDrop; }
 
     public void setMakePluginItemsDroppable(boolean makePluginItemsDroppable) { this.makePluginItemsDroppable = makePluginItemsDroppable; }
@@ -134,4 +138,6 @@ public class ConfigManager {
     public void setDestroyActivatorBlocksWithoutPkTool(boolean destroyActivatorBlocksWithoutPkTool) { this.destroyActivatorBlocksWithoutPkTool = destroyActivatorBlocksWithoutPkTool; }
 
     public void setDisplayTimer(boolean displayTimer) { this.displayTimer = displayTimer; }
+
+    public void setCycleOnLeftClick(boolean cycleOnLeftClick) { this.cycleOnLeftClick = cycleOnLeftClick; }
 }
