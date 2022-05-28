@@ -44,3 +44,4 @@ practice:
     destroyActivatorBlocksWithoutPkTool: false
     displayTimer: true
     cycleOnLeftClick: true
+    teleportWhenInVoid: true

@@ -22,6 +22,7 @@ public class ConfigManager {
     private boolean destroyActivatorBlocksWithoutPkTool;
     private boolean displayTimer;
     private boolean cycleOnLeftClick;
+    private boolean teleportWhenInVoid;
 
     public ConfigManager(FileConfiguration config) {
         this.config = config;
@@ -34,6 +35,7 @@ public class ConfigManager {
         this.destroyActivatorBlocksWithoutPkTool = config.getBoolean("practice.destroyActivatorBlocksWithoutPkTool");
         this.displayTimer = config.getBoolean("practice.displayTimer");
         this.cycleOnLeftClick = config.getBoolean("practice.cycleOnLeftClick");
+        this.teleportWhenInVoid = config.getBoolean("practice.teleportWhenInVoid");
     }
 
     private void loadNonInteractable() {
@@ -129,6 +131,8 @@ public class ConfigManager {
 
     public boolean getCycleOnLeftClick() { return cycleOnLeftClick; }
 
+    public boolean getTeleportWhenInVoid() { return teleportWhenInVoid; }
+
     public void setPracticeOnDrop(boolean practiceOnDrop) { this.practiceOnDrop = practiceOnDrop; }
 
     public void setMakePluginItemsDroppable(boolean makePluginItemsDroppable) { this.makePluginItemsDroppable = makePluginItemsDroppable; }
@@ -140,4 +144,6 @@ public class ConfigManager {
     public void setDisplayTimer(boolean displayTimer) { this.displayTimer = displayTimer; }
 
     public void setCycleOnLeftClick(boolean cycleOnLeftClick) { this.cycleOnLeftClick = cycleOnLeftClick; }
+
+    public void setTeleportWhenInVoid(boolean teleportWhenInVoid) { this.teleportWhenInVoid = teleportWhenInVoid; }
 }
