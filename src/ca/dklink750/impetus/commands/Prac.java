@@ -15,12 +15,12 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class Prac implements CommandExecutor {
-    final private PracLocation myPracLocations;
+    final private Practice practice;
     final private Database database;
     final private CustomItem practiceTool = new CustomItem(Material.SLIME_BALL, ChatColor.GREEN + "Return", Arrays.asList("Right click: Return to current practice location", "Left click: Cycle through practice locations", "Drop: Create new practice location"), "prac", "prac");
 
-    public Prac(PracLocation pracLocations, Database database) {
-        this.myPracLocations = pracLocations;
+    public Prac(Practice pracLocations, Database database) {
+        this.practice = pracLocations;
         this.database = database;
     }
 
@@ -40,12 +40,8 @@ public class Prac implements CommandExecutor {
                             User userToCheck = new User(database);
                             if (userToCheck.playerExists(args[0])) {
                                 UUID otherPlayer = userToCheck.getPlayerUUIDFromUserName(args[0]);
-                                if (myPracLocations.containsPlayer(otherPlayer, currentWorld.getUID())) {
-                                    if (args.length > 1 && args[1].equals("all")) {
-                                        copyAllPracLocationsFromOtherPlayer(player, otherPlayer, args[0]);
-                                    } else {
-                                        copyCurrentPracLocationFromOtherPlayer(player, otherPlayer, args[0]);
-                                    }
+                                if (practice.hasLocation(otherPlayer, currentWorld.getUID())) {
+                                    copyCurrentPracLocationFromOtherPlayer(player, otherPlayer, args[0]);
                                 } else {
                                     player.sendMessage(ChatColor.RED + args[0] + " does not have a practice location in this world!");
                                 }
@@ -66,34 +62,19 @@ public class Prac implements CommandExecutor {
     }
 
     private void pracAtCurrentLocation(Player player) {
-        if (!this.myPracLocations.containsPlayer(player.getUniqueId(), player.getWorld().getUID())) {
-            player.sendMessage(ChatColor.GREEN + "You are now in practice mode!");
-        } else {
-            player.sendMessage(ChatColor.GREEN + "Added new practice checkpoint!");
-        }
-        myPracLocations.registerNewLocation(player, player.getLocation(), PracLocationType.ADHOC);
+        practice.practice(player.getLocation(), player.getUniqueId(), player.getWorld().getUID());
+        player.sendMessage(ChatColor.GREEN + "You are now in practice mode!");
     }
 
     private void copyCurrentPracLocationFromOtherPlayer(Player player, UUID otherPlayer, String otherPlayerDisplayName) {
-        if (myPracLocations.associateLocation(player, myPracLocations.getCurrentWorldPracLocationUUID(otherPlayer, player.getWorld()), PracLocationType.ADHOC)) {
-            player.sendMessage(ChatColor.GREEN + "Successfully copied " + otherPlayerDisplayName + "'s current practice location!");
-        } else {
-            player.sendMessage(ChatColor.RED + "You already have " + otherPlayerDisplayName + "'s current location!");
+        if(practice.hasLocation(otherPlayer, player.getWorld().getUID())) {
+            if(practice.hasThisLocation(player.getUniqueId(), practice.getPracticeUUID(otherPlayer, player.getWorld().getUID()))) {
+                player.sendMessage(ChatColor.RED + "You already have this location!");
+            } else if(practiceTool.giveCustomItemToPlayer(player, ChatColor.RED + "Inventory full, cannot practice!")){
+                practice.persistLocationFor(player.getUniqueId(), practice.getPracticeUUID(otherPlayer, player.getWorld().getUID()), PracLocationType.ADHOC);
+                player.sendMessage(ChatColor.GREEN + "Successfully copied " + otherPlayerDisplayName + "'s practice location!");
+            }
         }
     }
 
-    private void copyAllPracLocationsFromOtherPlayer(Player player, UUID otherPlayer, String otherPlayerDisplayName) {
-        ArrayList<String> currentWorldPracticeLocationUUIDs = myPracLocations.getWorldPracticeLocationsUUID(otherPlayer, player.getWorld().getUID());
-        boolean copiedALocation = false;
-        for (String currentWorldPracticeLocationUUID : currentWorldPracticeLocationUUIDs) {
-            if (myPracLocations.associateLocation(player, currentWorldPracticeLocationUUID, PracLocationType.ADHOC)) {
-                copiedALocation = true;
-            }
-        }
-        if (copiedALocation) {
-            player.sendMessage(ChatColor.GREEN + "Successfully copied all of " + otherPlayerDisplayName + "'s current practice locations!");
-        } else {
-            player.sendMessage(ChatColor.RED + "You already have all of " + otherPlayerDisplayName + "'s locations!");
-        }
-    }
 }

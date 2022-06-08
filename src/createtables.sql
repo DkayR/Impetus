@@ -104,3 +104,11 @@ CREATE TABLE IF NOT EXISTS impetus_teleport_effects (
     CONSTRAINT `fk_teleport_type`
         FOREIGN KEY (teleport_type) REFERENCES impetus_teleport_types (teleport_type)
 );
+
+CREATE TABLE IF NOT EXISTS impetus_player_settings (
+    uuid CHAR(36) NOT NULL PRIMARY KEY,
+    show_timer BOOLEAN NOT NULL DEFAULT TRUE,
+    CONSTRAINT `fk_player_uuid`
+        FOREIGN KEY (uuid) REFERENCES impetus_players (uuid)
+        ON DELETE CASCADE
+);

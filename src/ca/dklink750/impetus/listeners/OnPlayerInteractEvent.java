@@ -4,6 +4,7 @@ import ca.dklink750.impetus.*;
 import ca.dklink750.impetus.utils.ConfigManager;
 import ca.dklink750.impetus.utils.CustomItem;
 import ca.dklink750.impetus.utils.HeldItemUtil;
+import ca.dklink750.impetus.utils.TimerManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -17,15 +18,17 @@ import java.util.UUID;
 
 public class OnPlayerInteractEvent implements org.bukkit.event.Listener {
     private final ActivatorBlock activatorBlock;
-    private final PracLocation pracLocation;
+    private final Practice practice;
     private final ConfigManager configManager;
+    private final TimerManager timer;
     private Long lastSystemTime = 0L;
 
 
-    public OnPlayerInteractEvent(ActivatorBlock activatorBlock, PracLocation pracLocation, ConfigManager configManager) {
+    public OnPlayerInteractEvent(ActivatorBlock activatorBlock, Practice practice, ConfigManager configManager, TimerManager timer) {
         this.activatorBlock = activatorBlock;
-        this.pracLocation = pracLocation;
+        this.practice = practice;
         this.configManager = configManager;
+        this.timer = timer;
     }
 
     // Checks if a block is interactable
@@ -89,14 +92,9 @@ public class OnPlayerInteractEvent implements org.bukkit.event.Listener {
                         event.setCancelled(true);
                     }
                     // Teleport player to current practice location if exists on right clicking while holding practice tool
-                    if((rightClickedAir || rightClickedBlock) && pracLocation.hasCurrentLocationInWorld(player, world)) {
-                        pracLocation.incrementAttempts(player);
-                        player.teleport(pracLocation.getCurrentPracticeLocation(player.getUniqueId(), world));
-                    }
-                    // Teleport player to different practice location if exists on left click while holding practice tool
-                    else if(configManager.getCycleOnLeftClick() && (leftClickedAir || leftClickedBlock) && pracLocation.hasOtherLocationInWorld(player, world)) {
-                        pracLocation.incrementAttempts(player);
-                        player.teleport(pracLocation.cyclePlayerPracticeLocation(player, world));
+                    if((rightClickedAir || rightClickedBlock) && practice.hasLocation(player.getUniqueId(), world.getUID())) {
+                        timer.incrementAttemptsFor(player);
+                        player.teleport(practice.getPractice(player.getUniqueId(), world.getUID()));
                     }
                 }
                 // Associates defined location with activator block on right click with the coord setter
@@ -105,7 +103,7 @@ public class OnPlayerInteractEvent implements org.bukkit.event.Listener {
 
                     // Creates blank "list of effects" associated with activator block if it does not exist and adds teleport to the set location as an effect
                     if(activatorBlock.isActivatorBlockFromUUID(activatorBlockUUID)) {
-                        UUID currentLocUUID = pracLocation.addCurrentLocation(player.getLocation());
+                        UUID currentLocUUID = practice.persistLocation(player.getLocation());
                         String effectSetUUID = activatorBlock.hasEffectSet(activatorBlockUUID) ? activatorBlock.getEffectSetUUIDFromActivatorUUID(activatorBlockUUID) : activatorBlock.createEffectSetAndAddToActivator(activatorBlockUUID).toString();
 
                         // Temporary deletion to only allow a single effect (only teleport for now) on an activator block

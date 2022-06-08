@@ -23,6 +23,7 @@ public class OnPlayerDropEvent implements org.bukkit.event.Listener {
             ItemStack item = event.getItemDrop().getItemStack();
             HeldItemUtil holding = new HeldItemUtil();
 
+            // TODO: Possibly remove practice on drop feature / alternatively add 'practice menu' display on drop
             if(item != null) {
                 if(holding.isPracticeTool(item) || holding.isPkTool(item) || holding.isCoordSetter(item)) {
                     event.setCancelled(true);

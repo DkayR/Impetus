@@ -1,9 +1,9 @@
 package ca.dklink750.impetus.listeners;
 
-import ca.dklink750.impetus.PracLocation;
-import ca.dklink750.impetus.PracStats;
+import ca.dklink750.impetus.Practice;
 import ca.dklink750.impetus.User;
 import ca.dklink750.impetus.utils.ConfigManager;
+import ca.dklink750.impetus.utils.TimerManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -12,14 +12,14 @@ import java.util.UUID;
 
 public class OnPlayerJoinEvent implements org.bukkit.event.Listener {
     private final User user;
-    private final PracLocation pracLocation;
-    private final PracStats pracStats;
+    private final Practice practice;
+    private final TimerManager timer;
     private final ConfigManager configManager;
 
-    public OnPlayerJoinEvent(User user, PracLocation pracLocation, ConfigManager configManager) {
+    public OnPlayerJoinEvent(User user, Practice practice, ConfigManager configManager) {
         this.user = user;
-        this.pracLocation = pracLocation;
-        this.pracStats = pracLocation.getPracStats();
+        this.practice = practice;
+        this.timer = practice.getTimer();
         this.configManager = configManager;
     }
 
@@ -27,13 +27,10 @@ public class OnPlayerJoinEvent implements org.bukkit.event.Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+        user.storeData(player);
 
-        user.storeUUID(uuid);
-        user.setBaseDisplayName(player.getDisplayName(), uuid);
-
-        if(pracLocation.hasCurrentLocationInWorld(player, player.getWorld()) && configManager.getDisplayTimer()) {
-            pracStats.displayStats(player);
+        if(practice.hasLocation(player.getUniqueId(), player.getWorld().getUID())) {
+            timer.start(player);
         }
     }
 }

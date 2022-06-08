@@ -15,13 +15,13 @@ import java.util.*;
 public class ActivatorBlock {
     final private Database database;
     final private LocationChecker locationChecker;
-    final private PracLocation pracLocation;
+    final private Practice practice;
     final private CustomItem practiceTool = new CustomItem(Material.SLIME_BALL, ChatColor.GREEN + "Return", Arrays.asList("Right click: Return to current practice location", "Left click: Cycle through practice locations", "Drop: Create new practice location"), "prac", "prac");
     final private Map<UUID, ActivatorLocation> tempActivators = new HashMap<>();
 
-    public ActivatorBlock(Database database, PracLocation pracLocation) {
+    public ActivatorBlock(Database database, Practice practice) {
         this.database = database;
-        this.pracLocation = pracLocation;
+        this.practice = practice;
         this.locationChecker = new LocationChecker(this.database);
     }
 
@@ -108,16 +108,14 @@ public class ActivatorBlock {
 
     // Removes all teleport effects from a given effect set
     public void removeTeleportEffectsFromEffectSet(String effectSetUUID) {
-        ArrayList<String> locationUUIDs = getAllEffectsOfTypeFromEffectSet(effectSetUUID, EffectType.TELEPORT);
+        cleanLocations(effectSetUUID);
         try (Connection conn = database.getConnection(); PreparedStatement stmt = conn.prepareStatement("DELETE FROM impetus_effect_set_effects WHERE effect_set_uuid = ? AND effect_type = 'TELEPORT';")) {
             stmt.setString(1, effectSetUUID);
             stmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        for (String locationUUID : locationUUIDs) {
-            locationChecker.deleteUnusedLocation(locationUUID);
-        }
+
     }
 
     // Sorts effects on effect set when an effect is removed (For later use when multiple effects are implemented)
@@ -246,21 +244,31 @@ public class ActivatorBlock {
         String effectSetUUID = getEffectSetUUIDFromActivatorLoc(activatorLocation);
         UUID activatorUUID = getActivatorBlockUUID(activatorLocation);
         // Do not have to delete effect set always, this is a temporary setup. Check for number of things using effect set and delete if 1 or less.
+        cleanLocations(effectSetUUID);
         deleteActivatorBlock(activatorUUID); // Child
         deleteEffectSetFromUUID(effectSetUUID); // Parent
     }
 
     // Deletes effect set and the unused locations associated
     public void deleteEffectSetFromUUID(String effectSetUUID) {
-        ArrayList<String> locationIDs = getAllEffectsOfTypeFromEffectSet(effectSetUUID, EffectType.TELEPORT);
         try (Connection conn = database.getConnection(); PreparedStatement stmt = conn.prepareStatement("DELETE FROM impetus_effect_sets WHERE effect_set_uuid = ?;")) {
             stmt.setString(1, effectSetUUID);
             stmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        for (String locationID : locationIDs) {
-            locationChecker.deleteUnusedLocation(locationID);
+
+    }
+    public void cleanLocations(String effectSetId) {
+        cleanLocations(effectSetId, false);
+    }
+    public void cleanLocations(String effectSetId, boolean force) {
+        for(String effectId : getAllEffectsOfTypeFromEffectSet(effectSetId, EffectType.TELEPORT)) {
+            if(force) {
+                locationChecker.deleteUnusedLocation(getLocationUUIDFromEffectID(effectId));
+            } else {
+                locationChecker.deleteActivatorLocation(getLocationUUIDFromEffectID(effectId));
+            }
         }
     }
 
@@ -358,22 +366,16 @@ public class ActivatorBlock {
             stmt.setString(1, effectID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                String locationUUID = rs.getString("location_uuid");
+                UUID locationUUID = UUID.fromString(rs.getString("location_uuid"));
                 String teleportType = rs.getString("teleport_type");
                 switch (teleportType) {
                     case "DEFINED":
-                        boolean hasCurrentLocation = pracLocation.hasCurrentLocationInWorld(player, player.getWorld());
-                        practiceTool.giveCustomItemToPlayer(player, ChatColor.RED + "Cannot give practice tool, inventory full!");
-                        if (pracLocation.playerHasOtherDefinedLocations(player, locationUUID)) {
-                            pracLocation.removeDefinedLocations(player);
-                        }
-                        if (!pracLocation.playerHasThisLocation(locationUUID, player)) {
-                            player.sendMessage(ChatColor.YELLOW + "Updated precise coordinates!");
-                            pracLocation.associateLocation(player, locationUUID, PracLocationType.DEFINED, hasCurrentLocation);
-                        } else if (!pracLocation.playerHasThisCurrentLocation(locationUUID, player)) {
-                            player.sendMessage(ChatColor.YELLOW + "Updated precise coordinates!");
-                            pracLocation.deselectLastPracLocation(player.getUniqueId(), player.getWorld().getUID());
-                            pracLocation.selectLocation(locationUUID, player);
+                        if(!practice.hasThisLocation(player.getUniqueId(), locationUUID)) {
+                            if(practiceTool.giveCustomItemToPlayer(player, ChatColor.RED + "Inventory full, cannot practice!")) {
+                                practice.unpractice(player.getUniqueId(), player.getWorld().getUID());
+                                practice.persistLocationFor(player.getUniqueId(), locationUUID, PracLocationType.DEFINED);
+                                player.sendMessage(ChatColor.YELLOW + "Updated precise coordinates!");
+                            }
                         }
                         break;
                     case "INSTANT":

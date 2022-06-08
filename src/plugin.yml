@@ -16,3 +16,7 @@ commands:
     description: Gives player tool to customize blocks
     usage: /pktool
     permission: Impetus.pktool
+  timer:
+    description: Timer related commands
+    usage: /timer (command)
+    permission: Impetus.timer

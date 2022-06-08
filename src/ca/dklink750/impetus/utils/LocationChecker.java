@@ -1,6 +1,7 @@
 package ca.dklink750.impetus.utils;
 
 import ca.dklink750.impetus.Database;
+import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,15 +9,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LocationChecker {
-    final private Database database;
+    final private Database db;
 
-    public LocationChecker(Database database) {
-        this.database = database;
+    public LocationChecker(Database db) {
+        this.db = db;
     }
 
     private boolean isLocationUsed(String locationUUID) {
-        int numOfLocations = getNumLocationsUsed(locationUUID);
-        return numOfLocations > 0;
+        return getNumLocationsUsed(locationUUID) > 0;
+    }
+
+    private boolean isLocationUsedByPlayers(String locationUUID) {
+        return getNumLocationUsedInPlayerPracLocations(locationUUID) > 0;
     }
 
     private int getNumLocationsUsed(String locationUUID) {
@@ -25,7 +29,7 @@ public class LocationChecker {
 
     private int getNumLocationsUsedInTeleportEffects(String locationUUID) {
         int numOfLocations = 0;
-        try (Connection conn = database.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(location_uuid) AS total FROM impetus_teleport_effects WHERE location_uuid = ?;")) {
+        try (Connection conn = db.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(location_uuid) AS total FROM impetus_teleport_effects WHERE location_uuid = ?;")) {
             stmt.setString(1, locationUUID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -39,7 +43,7 @@ public class LocationChecker {
 
     private int getNumLocationUsedInPlayerPracLocations(String locationUUID) {
         int numOfLocations = 0;
-        try (Connection conn = database.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(location_id) AS total FROM impetus_player_prac_locations WHERE location_id = ?;")) {
+        try (Connection conn = db.getConnection(); PreparedStatement stmt = conn.prepareStatement("SELECT COUNT(location_id) AS total FROM impetus_player_prac_locations WHERE location_id = ?;")) {
             stmt.setString(1, locationUUID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -51,9 +55,22 @@ public class LocationChecker {
         return numOfLocations;
     }
 
+    public void deleteActivatorLocation(String locationUUID) {
+        final String query = "DELETE FROM impetus_locations " +
+                "WHERE uuid=?;";
+        if(!isLocationUsedByPlayers(locationUUID)) {
+            try(Connection conn = db.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, locationUUID);
+                stmt.execute();
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void deleteUnusedLocation(String locationUUID) {
         if (!isLocationUsed(locationUUID)) {
-            try (Connection conn = database.getConnection(); PreparedStatement stmt = conn.prepareStatement("DELETE FROM impetus_locations WHERE uuid=?;")) {
+            try (Connection conn = db.getConnection(); PreparedStatement stmt = conn.prepareStatement("DELETE FROM impetus_locations WHERE uuid=?;")) {
                 stmt.setString(1, locationUUID);
                 stmt.execute();
             } catch (SQLException e) {
