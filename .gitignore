@@ -3,4 +3,7 @@
 .gradle
 build
 out
-/out/
+out/
+target/
+nms/
+dependency-reduced-pom.xml

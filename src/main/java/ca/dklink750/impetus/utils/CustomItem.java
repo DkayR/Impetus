@@ -1,9 +1,7 @@
 package ca.dklink750.impetus.utils;
 
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import net.minecraft.server.v1_8_R3.NBTTagString;
+import io.github.bananapuncher714.nbteditor.NBTEditor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -103,11 +101,7 @@ public class CustomItem {
         }
         this.customItem.setItemMeta(itemMeta);
         if (!this.nbtTag.isEmpty() && !this.nbtData.isEmpty()) {
-            net.minecraft.server.v1_8_R3.ItemStack nmsCustomItem = CraftItemStack.asNMSCopy(this.customItem);
-            NBTTagCompound customItemCompound = (nmsCustomItem.hasTag()) ? nmsCustomItem.getTag() : new NBTTagCompound();
-            customItemCompound.set(nbtTag, new NBTTagString(nbtTag));
-            nmsCustomItem.setTag(customItemCompound);
-            this.customItem = CraftItemStack.asBukkitCopy(nmsCustomItem);
+            this.customItem = NBTEditor.set(customItem, nbtTag, nbtData);
         }
     }
 
