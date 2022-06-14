@@ -7,3 +7,4 @@ out/
 target/
 nms/
 dependency-reduced-pom.xml
+/src/test/
