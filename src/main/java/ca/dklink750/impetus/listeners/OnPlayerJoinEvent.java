@@ -8,8 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.UUID;
-
 public class OnPlayerJoinEvent implements org.bukkit.event.Listener {
     private final User user;
     private final Practice practice;

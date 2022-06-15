@@ -1,8 +1,6 @@
 package ca.dklink750.impetus.utils;
 
 import ca.dklink750.impetus.Database;
-import org.bukkit.Bukkit;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

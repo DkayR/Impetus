@@ -1,7 +1,6 @@
 package ca.dklink750.impetus.listeners;
 
 import ca.dklink750.impetus.utils.TimerManager;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;

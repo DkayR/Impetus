@@ -20,7 +20,7 @@ public class TimerManager {
 
     public TimerManager(Impetus plugin, Database db) {
         this.plugin = plugin;
-        this.practice = new Practice(plugin, db, this);
+        this.practice = new Practice(db, this);
         this.db = db;
         timers = new HashMap<>();
     }

@@ -35,7 +35,7 @@ public class Impetus extends JavaPlugin {
         // Start the plugin when database is set up correctly
         if (database.isDatabaseInitialized()) {
             timer = new TimerManager(this.plugin, getMyDatabase());
-            pracLocations = new Practice(this.plugin, getMyDatabase(), getTimer());
+            pracLocations = new Practice(getMyDatabase(), getTimer());
             user = new User(getMyDatabase());
             activatorBlock = new ActivatorBlock(getMyDatabase(), getPracLocations());
 

@@ -14,15 +14,14 @@ public class ConfigManager {
     private String username;
     private String password;
     private String script;
-    private List<Material> ineractablesToCancel = new ArrayList<>();
+    private List<Material> interactablesToCancel = new ArrayList<>();
     private List<Material> activatorBlockTypes = new ArrayList<>();
     private boolean practiceOnDrop;
     private boolean makePluginItemsDroppable;
     private boolean destroyBlocksWhileHoldingPracticeTool;
     private boolean destroyActivatorBlocksWithoutPkTool;
-    private boolean displayTimer;
-    private boolean cycleOnLeftClick;
     private boolean teleportWhenInVoid;
+    private boolean displayTimer;
 
     public ConfigManager(FileConfiguration config) {
         this.config = config;
@@ -33,9 +32,8 @@ public class ConfigManager {
         this.makePluginItemsDroppable = config.getBoolean("practice.makePluginItemsDroppable");
         this.destroyBlocksWhileHoldingPracticeTool = config.getBoolean("practice.destroyBlocksWhileHoldingPracticeTool");
         this.destroyActivatorBlocksWithoutPkTool = config.getBoolean("practice.destroyActivatorBlocksWithoutPkTool");
-        this.displayTimer = config.getBoolean("practice.displayTimer");
-        this.cycleOnLeftClick = config.getBoolean("practice.cycleOnLeftClick");
         this.teleportWhenInVoid = config.getBoolean("practice.teleportWhenInVoid");
+        this.displayTimer = config.getBoolean("practice.displayTimer");
     }
 
     private void loadNonInteractable() {
@@ -44,12 +42,12 @@ public class ConfigManager {
             for(String materialName : materialNames) {
                 Material materialFromName = Material.matchMaterial(materialName);
                 if(materialFromName != null) {
-                    this.ineractablesToCancel.add(materialFromName);
+                    this.interactablesToCancel.add(materialFromName);
                 }
             }
         }
         else {
-            this.ineractablesToCancel = null;
+            this.interactablesToCancel = null;
         }
     }
 
@@ -57,9 +55,9 @@ public class ConfigManager {
         List<String> activatorBlockTypes = config.getStringList("practice.activatorBlocks");
         if(activatorBlockTypes != null) {
             for(String activatorBlockTypeName : activatorBlockTypes) {
-                Material activtorBlockTypeFromName = Material.matchMaterial(activatorBlockTypeName);
-                if(activtorBlockTypeFromName != null) {
-                    this.activatorBlockTypes.add(activtorBlockTypeFromName);
+                Material activatorBlockTypeFromName = Material.matchMaterial(activatorBlockTypeName);
+                if(activatorBlockTypeFromName != null) {
+                    this.activatorBlockTypes.add(activatorBlockTypeFromName);
                 }
             }
         }
@@ -101,8 +99,8 @@ public class ConfigManager {
         return script;
     }
 
-    public List<Material> getIneractablesToCancel() {
-        return ineractablesToCancel;
+    public List<Material> getInteractablesToCancel() {
+        return interactablesToCancel;
     }
 
     public List<Material> getActivatorBlockTypes() {
@@ -125,13 +123,9 @@ public class ConfigManager {
         return destroyActivatorBlocksWithoutPkTool;
     }
 
-    public boolean getDisplayTimer() {
-        return displayTimer;
-    }
-
-    public boolean getCycleOnLeftClick() { return cycleOnLeftClick; }
-
     public boolean getTeleportWhenInVoid() { return teleportWhenInVoid; }
+
+    public boolean getDisplayTimer() { return displayTimer; }
 
     public void setPracticeOnDrop(boolean practiceOnDrop) { this.practiceOnDrop = practiceOnDrop; }
 
@@ -141,9 +135,7 @@ public class ConfigManager {
 
     public void setDestroyActivatorBlocksWithoutPkTool(boolean destroyActivatorBlocksWithoutPkTool) { this.destroyActivatorBlocksWithoutPkTool = destroyActivatorBlocksWithoutPkTool; }
 
-    public void setDisplayTimer(boolean displayTimer) { this.displayTimer = displayTimer; }
-
-    public void setCycleOnLeftClick(boolean cycleOnLeftClick) { this.cycleOnLeftClick = cycleOnLeftClick; }
-
     public void setTeleportWhenInVoid(boolean teleportWhenInVoid) { this.teleportWhenInVoid = teleportWhenInVoid; }
+
+    public void setDisplayTimer(boolean displayTimer) { this.displayTimer = displayTimer; }
 }

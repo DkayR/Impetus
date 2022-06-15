@@ -3,10 +3,7 @@ package ca.dklink750.impetus;
 import ca.dklink750.impetus.utils.LocationChecker;
 import ca.dklink750.impetus.utils.TimerManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,14 +17,13 @@ public class Practice {
     final private LocationChecker locationChecker;
     final private TimerManager timer;
 
-    public Practice(Impetus plugin, Database db, TimerManager timer) {
+    public Practice(Database db, TimerManager timer) {
         this.db = db;
         this.locationChecker = new LocationChecker(this.db);
         this.timer = timer;
     }
 
-    public boolean unpractice(UUID player, UUID world) {
-        boolean result = false;
+    public void unpractice(UUID player, UUID world) {
         if(hasLocation(player, world)) {
             timer.stop(player, world);
             deselectLocations(player, world);
@@ -35,11 +31,9 @@ public class Practice {
             locations.addAll(getPracticeByTypeUUID(player, world, PracLocationType.ADHOC));
             locations.addAll(getPracticeByTypeUUID(player, world, PracLocationType.DEFINED));
             for (String location : locations) {
-                result = true;
                 deleteLocationFor(UUID.fromString(location), player);
             }
         }
-        return result;
     }
 
     public void deleteLocationFor(UUID location, UUID player) {
@@ -139,15 +133,14 @@ public class Practice {
         return result;
     }
 
-    public UUID practice(Location location, UUID player, UUID world, PracLocationType type) {
+    public void practice(Location location, UUID player, UUID world, PracLocationType type) {
         unpractice(player, world);
         UUID locationId = UUID.randomUUID();
         persistLocation(location, locationId);
         persistLocationFor(player, locationId, type);
-        return locationId;
     }
-    public UUID practice(Location location, UUID player, UUID world) {
-        return practice(location, player, world, PracLocationType.ADHOC);
+    public void practice(Location location, UUID player, UUID world) {
+        practice(location, player, world, PracLocationType.ADHOC);
     }
 
     public void persistLocationFor(UUID player, UUID location, PracLocationType type) {

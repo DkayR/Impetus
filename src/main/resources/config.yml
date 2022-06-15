@@ -42,6 +42,5 @@ practice:
     makePluginItemsDroppable: false
     destroyBlocksWhileHoldingPracticeTool: false
     destroyActivatorBlocksWithoutPkTool: false
-    displayTimer: true
-    cycleOnLeftClick: true
     teleportWhenInVoid: true
+    displayTimer: true

@@ -33,7 +33,7 @@ public class OnPlayerInteractEvent implements org.bukkit.event.Listener {
 
     // Checks if a block is interactable
     private boolean isInteractable(Material block) {
-        return configManager.getIneractablesToCancel().contains(block);
+        return configManager.getInteractablesToCancel().contains(block);
     }
 
     // Checks if a block is an accepted activator block
@@ -69,9 +69,7 @@ public class OnPlayerInteractEvent implements org.bukkit.event.Listener {
             World world = player.getWorld();
             Block block = event.getClickedBlock();
             Action action = event.getAction();
-            boolean leftClickedBlock = action.equals(Action.LEFT_CLICK_BLOCK);
             boolean rightClickedBlock = action.equals(Action.RIGHT_CLICK_BLOCK);
-            boolean leftClickedAir = action.equals(Action.LEFT_CLICK_AIR);
             boolean rightClickedAir = action.equals(Action.RIGHT_CLICK_AIR);
             boolean steppedOnPressurePlate = action.equals(Action.PHYSICAL);
             HeldItemUtil holding = new HeldItemUtil();
