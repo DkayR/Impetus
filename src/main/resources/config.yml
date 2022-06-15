@@ -44,3 +44,6 @@ practice:
     destroyActivatorBlocksWithoutPkTool: false
     teleportWhenInVoid: true
     displayTimer: true
+    destroyActivatorsOnExplode: false
+    destroyActivatorsOnPhysics: false
+    destroyActivatorsOnPistonExtend: false

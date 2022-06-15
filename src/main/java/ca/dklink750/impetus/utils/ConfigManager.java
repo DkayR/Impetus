@@ -22,6 +22,9 @@ public class ConfigManager {
     private boolean destroyActivatorBlocksWithoutPkTool;
     private boolean teleportWhenInVoid;
     private boolean displayTimer;
+    private boolean destroyActivatorsOnExplode;
+    private boolean destroyActivatorsOnPhysics;
+    private boolean destroyActivatorsOnPistonExtend;
 
     public ConfigManager(FileConfiguration config) {
         this.config = config;
@@ -34,6 +37,9 @@ public class ConfigManager {
         this.destroyActivatorBlocksWithoutPkTool = config.getBoolean("practice.destroyActivatorBlocksWithoutPkTool");
         this.teleportWhenInVoid = config.getBoolean("practice.teleportWhenInVoid");
         this.displayTimer = config.getBoolean("practice.displayTimer");
+        this.destroyActivatorsOnExplode = config.getBoolean("practice.destroyActivatorsOnExplode");
+        this.destroyActivatorsOnPhysics = config.getBoolean("practice.destroyActivatorsOnPhysics");
+        this.destroyActivatorsOnPistonExtend = config.getBoolean("practice.destroyActivatorsOnPistonExtend");
     }
 
     private void loadNonInteractable() {
@@ -126,6 +132,18 @@ public class ConfigManager {
     public boolean getTeleportWhenInVoid() { return teleportWhenInVoid; }
 
     public boolean getDisplayTimer() { return displayTimer; }
+
+    public boolean getDestroyActivatorsOnExplode() { return destroyActivatorsOnExplode; }
+
+    public boolean getDestroyActivatorsOnPhysics() { return destroyActivatorsOnPhysics; }
+
+    public boolean getDestroyActivatorsOnPistonExtend () { return destroyActivatorsOnPistonExtend; }
+
+    public void setDestroyActivatorsOnPistonExtend(boolean destroyActivatorsOnPistonExtend) { this.destroyActivatorsOnPistonExtend = destroyActivatorsOnPistonExtend; }
+
+    public void setDestroyActivatorsOnPhysics(boolean destroyActivatorsOnPhysics) { this.destroyActivatorsOnPhysics = destroyActivatorsOnPhysics; }
+
+    public void setDestroyActivatorsOnExplode(boolean destroyActivatorsOnExplode) { this.destroyActivatorsOnExplode = destroyActivatorsOnExplode; }
 
     public void setPracticeOnDrop(boolean practiceOnDrop) { this.practiceOnDrop = practiceOnDrop; }
 
