@@ -2,9 +2,6 @@ package ca.dklink750.impetus.utils;
 
 import ca.dklink750.impetus.Impetus;
 import net.md_5.bungee.api.ChatColor;
-import net.minecraft.server.v1_8_R3.ChatComponentText;
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -44,8 +41,7 @@ public class Timer {
     }
 
     private void sendActionBar() {
-        PacketPlayOutChat packet = new PacketPlayOutChat(new ChatComponentText(ChatColor.GRAY + "Time Elapsed: " + ChatColor.AQUA + getFormattedTime(timeElapsed) + ChatColor.GRAY + " - " + "Attempts: " + ChatColor.AQUA + attempts), (byte) 2);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        plugin.getNmsProvider().sendActionBar(player, ChatColor.GRAY + "Time Elapsed: " + ChatColor.AQUA + getFormattedTime(timeElapsed) + ChatColor.GRAY + " - " + "Attempts: " + ChatColor.AQUA + attempts);
     }
 
     private String getFormattedTime(double timeElapsed) {

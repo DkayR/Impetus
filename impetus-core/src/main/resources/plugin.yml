@@ -1,5 +1,5 @@
 name: Impetus
-version: 1.0.1
+version: 1.0.4
 author: dklink750
 main: ca.dklink750.impetus.Impetus
 api-version: 1.8.8
@@ -20,3 +20,7 @@ commands:
     description: Timer related commands
     usage: /timer (command)
     permission: Impetus.timer
+  test:
+    description: test
+    usage: /test
+    permission: Impetus.test

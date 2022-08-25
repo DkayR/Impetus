@@ -1,15 +1,16 @@
 package ca.dklink750.impetus;
 
-import ca.dklink750.impetus.commands.PkTool;
-import ca.dklink750.impetus.commands.Prac;
-import ca.dklink750.impetus.commands.TimerCommand;
-import ca.dklink750.impetus.commands.Unprac;
+import ca.dklink750.impetus.commands.*;
 import ca.dklink750.impetus.listeners.*;
 import ca.dklink750.impetus.utils.ConfigManager;
+import ca.dklink750.impetus.utils.NmsProvider;
 import ca.dklink750.impetus.utils.TimerManager;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class Impetus extends JavaPlugin {
 
@@ -21,6 +22,17 @@ public class Impetus extends JavaPlugin {
     private final FileConfiguration config = this.getConfig();
     private ConfigManager configManager;
     private TimerManager timer;
+    private static NmsProvider nmsProvider;
+
+    static {
+        try {
+            String packageName = Impetus.class.getPackage().getName();
+            String internalName = Bukkit.getServer().getClass().getName().split("\\.")[3];
+            nmsProvider = (NmsProvider)Class.forName(packageName + "." + internalName).getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onEnable() {
@@ -43,6 +55,10 @@ public class Impetus extends JavaPlugin {
             registerCommands();
             registerEventListeners(getServer().getPluginManager());
         }
+    }
+
+    public NmsProvider getNmsProvider() {
+        return nmsProvider;
     }
 
     public Practice getPracLocations() {
@@ -80,6 +96,7 @@ public class Impetus extends JavaPlugin {
         this.getCommand("unprac").setExecutor(new Unprac(getPracLocations()));
         this.getCommand("pktool").setExecutor(new PkTool());
         this.getCommand("timer").setExecutor(new TimerCommand(getTimer()));
+        this.getCommand("test").setExecutor(new Test());
     }
 
     private void registerEventListeners(PluginManager pluginManager) {
